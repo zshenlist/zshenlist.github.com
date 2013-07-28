@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>MEMOLIST</title><link href="/" rel="alternate"></link><link href="//feeds/all.atom.xml" rel="self"></link><id>/</id><updated>2013-07-27T18:15:21-06:00</updated><entry><title>Hello World Test</title><link href="//hello_world.html" rel="alternate"></link><updated>2013-07-27T18:15:21-06:00</updated><author><name>zshen</name></author><id>//hello_world.html</id><summary type="html">&lt;h1&gt;Hello World Test&lt;/h1&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>MEMOLIST</title><link href="/" rel="alternate"></link><link href="//feeds/all.atom.xml" rel="self"></link><id>/</id><updated>2013-07-27T18:31:06-06:00</updated><entry><title>Hello World Test</title><link href="//hello_world.html" rel="alternate"></link><updated>2013-07-27T18:31:06-06:00</updated><author><name>zshen</name></author><id>//hello_world.html</id><summary type="html">&lt;h1&gt;Hello World Test&lt;/h1&gt;
 &lt;hr /&gt;
+&lt;p&gt;Testing plan:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;math equation&lt;/li&gt;
+&lt;li&gt;code section&lt;/li&gt;
+&lt;li&gt;table list&lt;/li&gt;
+&lt;/ul&gt;
 &lt;p&gt;$$ e^{j\cdot\pi} + 1 = 0 $$&lt;/p&gt;
 &lt;p&gt;code section:&lt;/p&gt;
 &lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="nf"&gt;main&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;argc&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kt"&gt;char&lt;/span&gt;&lt;span class="o"&gt;**&lt;/span&gt; &lt;span class="n"&gt;argv&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
@@ -8,4 +14,27 @@
     &lt;span class="n"&gt;printf&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;Hello, World!&lt;/span&gt;&lt;span class="se"&gt;\n&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
     &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
 &lt;span class="p"&gt;}&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;</summary></entry></feed>
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;1st&lt;/th&gt;
+&lt;th&gt;2nd&lt;/th&gt;
+&lt;th&gt;3rd&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;haha&lt;/td&gt;
+&lt;td&gt;heihei&lt;/td&gt;
+&lt;td&gt;yes&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;test&lt;/td&gt;
+&lt;td&gt;&lt;strong&gt;test&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;test&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;</summary></entry></feed>
