@@ -56,36 +56,31 @@
         
         
             <header>
-                <h1><a href="../." id="site-title">MEMOLIST </a> : <a href=".././readme.html" id="page-title">readme</a></h1>
-                <time datetime="2013-07-27T19:39:33.580153">六 27 七月 2013</time>
+                <h1><a href="../." id="site-title">MEMOLIST </a> : <a href=".././readme.html" id="page-title">Blog on GitHub Pages</a></h1>
+                <time datetime="2013-07-27T19:46:30.522814">六 27 七月 2013</time>
             </header>
 
             <article>
                 <h1>Blog on GitHub Pages</h1>
 <p>As a record, this post demos how this blog was published on GitHub pages. The steps below were performed on Ubuntu 10.10.</p>
 <h2>Stage 0: Blog Construction</h2>
-<ol>
-<li>Make sure your machine has <a href="http://en.wikipedia.org/wiki/Pip_(package_manager)">pip</a> installed.</li>
-<li>
-<p>Installation of <a href="http://en.wikipedia.org/wiki/Markdown">markdown</a> and <a href="http://docs.getpelican.com/">pelican</a>:</p>
-<p>$ sudo pip install markdown
-$ sudo pip install pelican</p>
-</li>
-<li>
+<p>Make sure your machine has <a href="http://en.wikipedia.org/wiki/Pip_(package_manager)">pip</a> installed. Installation of <a href="http://en.wikipedia.org/wiki/Markdown">markdown</a> and <a href="http://docs.getpelican.com/">pelican</a>:</p>
+<div class="codehilite"><pre><span class="err">$</span> <span class="n">sudo</span> <span class="n">pip</span> <span class="n">install</span> <span class="n">markdown</span>
+<span class="err">$</span> <span class="n">sudo</span> <span class="n">pip</span> <span class="n">install</span> <span class="n">pelican</span>
+</pre></div>
+
+
 <p>Create a folder as your local blog home. Run pelican-quickstart there:</p>
-<p>$ pelican-quickstart</p>
-</li>
-<li>
-<p>Checkout the folder. A couple of files (e.g. Makefile) and subfolders should appear. Edit your makrdown source files as usual. When completed, drop them into your blog home's subfolder 'src' (pelican ver. 2) or 'content' (pelican ver. 3).</p>
-</li>
-<li>
-<p>Build up your blog in the terminal:</p>
-<p>$ make</p>
-</li>
-<li>
+<div class="codehilite"><pre><span class="err">$</span> <span class="n">pelican</span><span class="o">-</span><span class="n">quickstart</span>
+</pre></div>
+
+
+<p>Checkout the folder. A couple of files (e.g. Makefile) and subfolders should appear. Edit your makrdown source files as usual. When completed, drop them into your blog home's subfolder 'src' (pelican ver. 2) or 'content' (pelican ver. 3). Let's build up the blog in the terminal:</p>
+<div class="codehilite"><pre><span class="err">$</span> <span class="n">make</span>
+</pre></div>
+
+
 <p>Open your browser and review your local blog at 'output/index.html'.</p>
-</li>
-</ol>
 <h2>Stage 1: Publish on GitHub Pages</h2>
 <p>Make sure your machine has <a href="http://git-scm.com/">git</a> installed. <a href="https://github.com/davisp/ghp-import">ghp-import</a> is needed as well.</p>
 <div class="codehilite"><pre><span class="err">$</span> <span class="n">sudo</span> <span class="n">pip</span> <span class="n">install</span> <span class="n">ghp</span><span class="o">-</span><span class="n">import</span>
@@ -93,7 +88,7 @@ $ sudo pip install pelican</p>
 
 
 <p>To make things easier, create a branch (say, <em>source</em>) to save source files including markdown and config scripts. The master branch can be used to save subfolder 'output'.</p>
-<div class="codehilite"><pre><span class="err">$</span> <span class="n">cd</span> <span class="err">&#39;</span><span class="n">your_local_blog_home</span><span class="err">&#39;</span>
+<div class="codehilite"><pre><span class="err">$</span> <span class="n">cd</span> <span class="n">your_local_blog_home</span>
 <span class="err">$</span> <span class="n">git</span> <span class="n">init</span>
 <span class="err">$</span> <span class="n">git</span> <span class="n">add</span> <span class="n">output</span>
 <span class="err">$</span> <span class="n">git</span> <span class="n">commit</span> <span class="o">-</span><span class="n">m</span> <span class="s">&quot;master init&quot;</span>
