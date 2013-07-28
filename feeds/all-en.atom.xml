@@ -13,7 +13,9 @@
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;Checkout the folder. A couple of files (e.g. Makefile) and subfolders should appear. Edit your makrdown source files as usual. When completed, drop them into your blog home's subfolder 'src' (pelican ver. 2) or 'content' (pelican ver. 3). Let's build up the blog in the terminal:&lt;/p&gt;
+&lt;p&gt;Checkout the folder. A couple of files (e.g. Makefile) and subfolders should appear.&lt;/p&gt;
+&lt;p&gt;&lt;img alt="pelican blog tree (ver. 2)" src="images/2013_07_27_p0f0.png" /&gt;&lt;/p&gt;
+&lt;p&gt;Edit your makrdown source files as usual. When completed, drop them into your blog home's subfolder 'src' (pelican ver. 2) or 'content' (pelican ver. 3). Let's build up the blog in the terminal:&lt;/p&gt;
 &lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span class="err"&gt;$&lt;/span&gt; &lt;span class="n"&gt;make&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
