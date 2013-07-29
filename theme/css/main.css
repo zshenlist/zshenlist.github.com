@@ -11,7 +11,7 @@ body {
     color: #222;
 
     font-family: verdana, courier, freesans, clean, sans-serif;
-    /*font-family: helvetica, arial, freesans, clean, sans-serif;*/
+    /*font-family: arial, freesans, clean, sans-serif;*/
 	/*font: 20px Hoefler Text, bodyfont, sans-serif;*/
     font-size: 98%;
     line-height: 1.35em;
@@ -22,7 +22,7 @@ h1, h2, h3,
 h4, h5, h6 {
     color: #333333;
 
-    font-family: ubuntu, verdana, helvetica, "FreeSerif", serif;
+    font-family: ubuntu, verdana, arial, "FreeSerif", serif;
     /*font-style: italic;*/
     font-weight: bolder;
 }
@@ -122,7 +122,7 @@ table tr {
 .page-head h1 {
     margin: .7em auto;
 
-    font-family: helvetica, monospace, "Times New Roman", Times, serif;
+    font-family: arial, monospace, "Times New Roman", Times, serif;
     font-size: 2.8em;
     text-align: center;
 }
@@ -150,7 +150,7 @@ table tr {
 .post .post-header {
     margin: 0;
     padding: .1em;
-    font-family: helvetica, monospace, "Times New Roman", Times, serif;
+    font-family: arial, monospace, "Times New Roman", Times, serif;
 }
 
 
@@ -202,7 +202,7 @@ table tr {
     margin: 0;
     padding: .1em;
 
-    font-family: helvetica, "Times New Roman", Times, serif;
+    font-family: arial, "Times New Roman", Times, serif;
 }
 
 
