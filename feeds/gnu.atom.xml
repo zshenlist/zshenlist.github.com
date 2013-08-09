@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom"><title>MEMOLIST</title><link href="/" rel="alternate"></link><link href="//feeds/gnu.atom.xml" rel="self"></link><id>/</id><updated>2013-08-09T00:00:00-06:00</updated><entry><title>Profiling Tips</title><link href="//2013_08_08_p0.html" rel="alternate"></link><updated>2013-08-09T00:00:00-06:00</updated><author><name>zshen</name></author><id>//2013_08_08_p0.html</id><summary type="html">&lt;h1&gt;Profiling Tips&lt;/h1&gt;
 &lt;p&gt;Here is a demo C source code:&lt;/p&gt;
-&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span class="cm"&gt;/* Filename: gprof_demo.c */&lt;/span&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span class="cm"&gt;/* Filename: factorial.c */&lt;/span&gt;
 &lt;span class="p"&gt;#&lt;/span&gt;&lt;span class="k"&gt;include&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="n"&gt;stdlib&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;h&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt;
 &lt;span class="p"&gt;#&lt;/span&gt;&lt;span class="k"&gt;include&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="n"&gt;stdio&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;h&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt;
 &lt;span class="p"&gt;#&lt;/span&gt;&lt;span class="k"&gt;include&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="k"&gt;string&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;h&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt;
@@ -41,23 +41,44 @@
 
 
 &lt;p&gt;Here is the compiling command:&lt;/p&gt;
-&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span class="err"&gt;$&lt;/span&gt; &lt;span class="n"&gt;gcc&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;o&lt;/span&gt; &lt;span class="n"&gt;gprof_demo&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;g&lt;/span&gt; &lt;span class="n"&gt;gprof_demo&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;pg&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;Wall&lt;/span&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span class="err"&gt;$&lt;/span&gt; &lt;span class="n"&gt;gcc&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;o&lt;/span&gt; &lt;span class="n"&gt;factorial&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;g&lt;/span&gt; &lt;span class="n"&gt;factorial&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;pg&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;Wall&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;p&gt;Run the executable file to generate the profiling report 'gmon.out'.&lt;/p&gt;
-&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span class="err"&gt;$&lt;/span&gt; &lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;gprof_demo&lt;/span&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span class="err"&gt;$&lt;/span&gt; &lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;factorial&lt;/span&gt; &lt;span class="mi"&gt;20&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;When 'gprof_demo' is running, you can check out its run-time status by:&lt;/p&gt;
-&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span class="err"&gt;$&lt;/span&gt; &lt;span class="n"&gt;cat&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;proc&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="err"&gt;`&lt;/span&gt;&lt;span class="n"&gt;pidof&lt;/span&gt; &lt;span class="n"&gt;gprof_demo&lt;/span&gt;&lt;span class="err"&gt;`&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;status&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;proc&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="err"&gt;`&lt;/span&gt;&lt;span class="n"&gt;pidof&lt;/span&gt; &lt;span class="n"&gt;gprof_demo&lt;/span&gt;&lt;span class="err"&gt;`&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;maps&lt;/span&gt; &lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;profile&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;log&lt;/span&gt;
+&lt;p&gt;When 'factorial' is running, you can optionally check out its run-time status by:&lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span class="err"&gt;$&lt;/span&gt; &lt;span class="n"&gt;cat&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;proc&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="err"&gt;`&lt;/span&gt;&lt;span class="n"&gt;pidof&lt;/span&gt; &lt;span class="n"&gt;factorial&lt;/span&gt;&lt;span class="err"&gt;`&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;status&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;proc&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="err"&gt;`&lt;/span&gt;&lt;span class="n"&gt;pidof&lt;/span&gt; &lt;span class="n"&gt;factorial&lt;/span&gt;&lt;span class="err"&gt;`&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;maps&lt;/span&gt; &lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;profile&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;log&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;Once 'gprof_demo' is over, try gprof to parse the profiling report:&lt;/p&gt;
-&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span class="err"&gt;$&lt;/span&gt; &lt;span class="n"&gt;gprof&lt;/span&gt; &lt;span class="n"&gt;gprof_demo&lt;/span&gt; &lt;span class="n"&gt;gmon&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;out&lt;/span&gt; &lt;span class="o"&gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;profile&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;log&lt;/span&gt;
+&lt;p&gt;Once 'factorial' is over, try gprof to parse the profiling report:&lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span class="err"&gt;$&lt;/span&gt; &lt;span class="n"&gt;gprof&lt;/span&gt; &lt;span class="n"&gt;factorial&lt;/span&gt; &lt;span class="n"&gt;gmon&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;out&lt;/span&gt; &lt;span class="o"&gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;profile&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;log&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;Check out 'profile.log' and, eventually, you can see the statistics of this demo program.&lt;/p&gt;</summary></entry></feed>
+&lt;p&gt;Check out 'profile.log' and, eventually, you can see the statistics of this demo program.&lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span class="nx"&gt;Flat&lt;/span&gt; &lt;span class="nx"&gt;profile&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+
+&lt;span class="nb"&gt;Each&lt;/span&gt; &lt;span class="nx"&gt;sample&lt;/span&gt; &lt;span class="nx"&gt;counts&lt;/span&gt; &lt;span class="nx"&gt;as&lt;/span&gt; &lt;span class="mf"&gt;0.01&lt;/span&gt; &lt;span class="nx"&gt;seconds.&lt;/span&gt;
+  &lt;span class="o"&gt;%&lt;/span&gt;   &lt;span class="nx"&gt;cumulative&lt;/span&gt;   &lt;span class="bp"&gt;self&lt;/span&gt;              &lt;span class="bp"&gt;self&lt;/span&gt;     &lt;span class="nx"&gt;total&lt;/span&gt;           
+ &lt;span class="nb"&gt;time&lt;/span&gt;   &lt;span class="nx"&gt;seconds&lt;/span&gt;   &lt;span class="nx"&gt;seconds&lt;/span&gt;    &lt;span class="nx"&gt;calls&lt;/span&gt;  &lt;span class="nx"&gt;ns&lt;/span&gt;&lt;span class="p"&gt;/&lt;/span&gt;&lt;span class="nb"&gt;call&lt;/span&gt;  &lt;span class="nx"&gt;ns&lt;/span&gt;&lt;span class="p"&gt;/&lt;/span&gt;&lt;span class="nb"&gt;call&lt;/span&gt;  &lt;span class="nb"&gt;name&lt;/span&gt;    
+&lt;span class="mf"&gt;100.95&lt;/span&gt;      &lt;span class="mf"&gt;0.04&lt;/span&gt;     &lt;span class="mf"&gt;0.04&lt;/span&gt;   &lt;span class="mi"&gt;210000&lt;/span&gt;   &lt;span class="mf"&gt;192.29&lt;/span&gt;   &lt;span class="mf"&gt;192.29&lt;/span&gt;  &lt;span class="nx"&gt;factorial&lt;/span&gt;
+
+&lt;span class="nx"&gt;...&lt;/span&gt;
+
+&lt;span class="nx"&gt;granularity&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="nb"&gt;each&lt;/span&gt; &lt;span class="nx"&gt;sample&lt;/span&gt; &lt;span class="nx"&gt;hit&lt;/span&gt; &lt;span class="nx"&gt;covers&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt; &lt;span class="nx"&gt;byte&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;s&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="nb"&gt;for&lt;/span&gt; &lt;span class="mf"&gt;24.76&lt;/span&gt;&lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="nx"&gt;of&lt;/span&gt; &lt;span class="mf"&gt;0.04&lt;/span&gt; &lt;span class="nx"&gt;seconds&lt;/span&gt;
+
+&lt;span class="nb"&gt;index&lt;/span&gt; &lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="nb"&gt;time&lt;/span&gt;    &lt;span class="bp"&gt;self&lt;/span&gt;  &lt;span class="nb"&gt;children&lt;/span&gt;    &lt;span class="nx"&gt;called&lt;/span&gt;     &lt;span class="nb"&gt;name&lt;/span&gt;
+                             &lt;span class="mi"&gt;2100000&lt;/span&gt;             &lt;span class="nx"&gt;factorial&lt;/span&gt; &lt;span class="err"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="cp"&gt;]&lt;/span&gt;
+                0.04    0.00  210000/210000      main &lt;span class="cp"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="cp"&gt;]&lt;/span&gt;
+&lt;span class="cp"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="cp"&gt;]&lt;/span&gt;    100.0    0.04    0.00  210000+2100000 factorial &lt;span class="cp"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="cp"&gt;]&lt;/span&gt;
+                             2100000             factorial &lt;span class="cp"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="cp"&gt;]&lt;/span&gt;
+-----------------------------------------------
+                                                 &lt;span class="nt"&gt;&amp;lt;spontaneous&amp;gt;&lt;/span&gt;
+&lt;span class="cp"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="cp"&gt;]&lt;/span&gt;    100.0    0.00    0.04                 main &lt;span class="cp"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="cp"&gt;]&lt;/span&gt;
+                0.04    0.00  210000/210000      factorial &lt;span class="cp"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="cp"&gt;]&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;</summary></entry></feed>

@@ -58,7 +58,7 @@
 <article>
     <h1>Profiling Tips</h1>
 <p>Here is a demo C source code:</p>
-<div class="codehilite"><pre><span class="cm">/* Filename: gprof_demo.c */</span>
+<div class="codehilite"><pre><span class="cm">/* Filename: factorial.c */</span>
 <span class="p">#</span><span class="k">include</span> <span class="o">&lt;</span><span class="n">stdlib</span><span class="p">.</span><span class="n">h</span><span class="o">&gt;</span>
 <span class="p">#</span><span class="k">include</span> <span class="o">&lt;</span><span class="n">stdio</span><span class="p">.</span><span class="n">h</span><span class="o">&gt;</span>
 <span class="p">#</span><span class="k">include</span> <span class="o">&lt;</span><span class="k">string</span><span class="p">.</span><span class="n">h</span><span class="o">&gt;</span>
@@ -98,26 +98,47 @@
 
 
 <p>Here is the compiling command:</p>
-<div class="codehilite"><pre><span class="err">$</span> <span class="n">gcc</span> <span class="o">-</span><span class="n">o</span> <span class="n">gprof_demo</span> <span class="o">-</span><span class="n">g</span> <span class="n">gprof_demo</span><span class="p">.</span><span class="n">c</span> <span class="o">-</span><span class="n">pg</span> <span class="o">-</span><span class="n">Wall</span>
+<div class="codehilite"><pre><span class="err">$</span> <span class="n">gcc</span> <span class="o">-</span><span class="n">o</span> <span class="n">factorial</span> <span class="o">-</span><span class="n">g</span> <span class="n">factorial</span><span class="p">.</span><span class="n">c</span> <span class="o">-</span><span class="n">pg</span> <span class="o">-</span><span class="n">Wall</span>
 </pre></div>
 
 
 <p>Run the executable file to generate the profiling report 'gmon.out'.</p>
-<div class="codehilite"><pre><span class="err">$</span> <span class="p">.</span><span class="o">/</span><span class="n">gprof_demo</span>
+<div class="codehilite"><pre><span class="err">$</span> <span class="p">.</span><span class="o">/</span><span class="n">factorial</span> <span class="mi">20</span>
 </pre></div>
 
 
-<p>When 'gprof_demo' is running, you can check out its run-time status by:</p>
-<div class="codehilite"><pre><span class="err">$</span> <span class="n">cat</span> <span class="o">/</span><span class="n">proc</span><span class="o">/</span><span class="err">`</span><span class="n">pidof</span> <span class="n">gprof_demo</span><span class="err">`</span><span class="o">/</span><span class="n">status</span> <span class="o">/</span><span class="n">proc</span><span class="o">/</span><span class="err">`</span><span class="n">pidof</span> <span class="n">gprof_demo</span><span class="err">`</span><span class="o">/</span><span class="n">maps</span> <span class="o">&gt;</span> <span class="n">profile</span><span class="p">.</span><span class="n">log</span>
+<p>When 'factorial' is running, you can optionally check out its run-time status by:</p>
+<div class="codehilite"><pre><span class="err">$</span> <span class="n">cat</span> <span class="o">/</span><span class="n">proc</span><span class="o">/</span><span class="err">`</span><span class="n">pidof</span> <span class="n">factorial</span><span class="err">`</span><span class="o">/</span><span class="n">status</span> <span class="o">/</span><span class="n">proc</span><span class="o">/</span><span class="err">`</span><span class="n">pidof</span> <span class="n">factorial</span><span class="err">`</span><span class="o">/</span><span class="n">maps</span> <span class="o">&gt;</span> <span class="n">profile</span><span class="p">.</span><span class="n">log</span>
 </pre></div>
 
 
-<p>Once 'gprof_demo' is over, try gprof to parse the profiling report:</p>
-<div class="codehilite"><pre><span class="err">$</span> <span class="n">gprof</span> <span class="n">gprof_demo</span> <span class="n">gmon</span><span class="p">.</span><span class="n">out</span> <span class="o">&gt;&gt;</span> <span class="n">profile</span><span class="p">.</span><span class="n">log</span>
+<p>Once 'factorial' is over, try gprof to parse the profiling report:</p>
+<div class="codehilite"><pre><span class="err">$</span> <span class="n">gprof</span> <span class="n">factorial</span> <span class="n">gmon</span><span class="p">.</span><span class="n">out</span> <span class="o">&gt;&gt;</span> <span class="n">profile</span><span class="p">.</span><span class="n">log</span>
 </pre></div>
 
 
 <p>Check out 'profile.log' and, eventually, you can see the statistics of this demo program.</p>
+<div class="codehilite"><pre><span class="nx">Flat</span> <span class="nx">profile</span><span class="p">:</span>
+
+<span class="nb">Each</span> <span class="nx">sample</span> <span class="nx">counts</span> <span class="nx">as</span> <span class="mf">0.01</span> <span class="nx">seconds.</span>
+  <span class="o">%</span>   <span class="nx">cumulative</span>   <span class="bp">self</span>              <span class="bp">self</span>     <span class="nx">total</span>           
+ <span class="nb">time</span>   <span class="nx">seconds</span>   <span class="nx">seconds</span>    <span class="nx">calls</span>  <span class="nx">ns</span><span class="p">/</span><span class="nb">call</span>  <span class="nx">ns</span><span class="p">/</span><span class="nb">call</span>  <span class="nb">name</span>    
+<span class="mf">100.95</span>      <span class="mf">0.04</span>     <span class="mf">0.04</span>   <span class="mi">210000</span>   <span class="mf">192.29</span>   <span class="mf">192.29</span>  <span class="nx">factorial</span>
+
+<span class="nx">...</span>
+
+<span class="nx">granularity</span><span class="p">:</span> <span class="nb">each</span> <span class="nx">sample</span> <span class="nx">hit</span> <span class="nx">covers</span> <span class="mi">2</span> <span class="nx">byte</span><span class="p">(</span><span class="nb">s</span><span class="p">)</span> <span class="nb">for</span> <span class="mf">24.76</span><span class="o">%</span> <span class="nx">of</span> <span class="mf">0.04</span> <span class="nx">seconds</span>
+
+<span class="nb">index</span> <span class="o">%</span> <span class="nb">time</span>    <span class="bp">self</span>  <span class="nb">children</span>    <span class="nx">called</span>     <span class="nb">name</span>
+                             <span class="mi">2100000</span>             <span class="nx">factorial</span> <span class="err">[</span><span class="mi">1</span><span class="cp">]</span>
+                0.04    0.00  210000/210000      main <span class="cp">[</span><span class="mi">2</span><span class="cp">]</span>
+<span class="cp">[</span><span class="mi">1</span><span class="cp">]</span>    100.0    0.04    0.00  210000+2100000 factorial <span class="cp">[</span><span class="mi">1</span><span class="cp">]</span>
+                             2100000             factorial <span class="cp">[</span><span class="mi">1</span><span class="cp">]</span>
+-----------------------------------------------
+                                                 <span class="nt">&lt;spontaneous&gt;</span>
+<span class="cp">[</span><span class="mi">2</span><span class="cp">]</span>    100.0    0.00    0.04                 main <span class="cp">[</span><span class="mi">2</span><span class="cp">]</span>
+                0.04    0.00  210000/210000      factorial <span class="cp">[</span><span class="mi">1</span><span class="cp">]</span>
+</pre></div>
 </article>
 
     <div class="blogItem">
