@@ -61,24 +61,10 @@
 
 
 &lt;p&gt;Check out 'profile.log' and, eventually, you can see the statistics of this demo program.&lt;/p&gt;
-&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span class="nx"&gt;Flat&lt;/span&gt; &lt;span class="nx"&gt;profile&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span class="n"&gt;Flat&lt;/span&gt; &lt;span class="n"&gt;profile&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;
 
-&lt;span class="nb"&gt;Each&lt;/span&gt; &lt;span class="nx"&gt;sample&lt;/span&gt; &lt;span class="nx"&gt;counts&lt;/span&gt; &lt;span class="nx"&gt;as&lt;/span&gt; &lt;span class="mf"&gt;0.01&lt;/span&gt; &lt;span class="nx"&gt;seconds.&lt;/span&gt;
-  &lt;span class="o"&gt;%&lt;/span&gt;   &lt;span class="nx"&gt;cumulative&lt;/span&gt;   &lt;span class="bp"&gt;self&lt;/span&gt;              &lt;span class="bp"&gt;self&lt;/span&gt;     &lt;span class="nx"&gt;total&lt;/span&gt;           
- &lt;span class="nb"&gt;time&lt;/span&gt;   &lt;span class="nx"&gt;seconds&lt;/span&gt;   &lt;span class="nx"&gt;seconds&lt;/span&gt;    &lt;span class="nx"&gt;calls&lt;/span&gt;  &lt;span class="nx"&gt;ns&lt;/span&gt;&lt;span class="p"&gt;/&lt;/span&gt;&lt;span class="nb"&gt;call&lt;/span&gt;  &lt;span class="nx"&gt;ns&lt;/span&gt;&lt;span class="p"&gt;/&lt;/span&gt;&lt;span class="nb"&gt;call&lt;/span&gt;  &lt;span class="nb"&gt;name&lt;/span&gt;    
-&lt;span class="mf"&gt;100.95&lt;/span&gt;      &lt;span class="mf"&gt;0.04&lt;/span&gt;     &lt;span class="mf"&gt;0.04&lt;/span&gt;   &lt;span class="mi"&gt;210000&lt;/span&gt;   &lt;span class="mf"&gt;192.29&lt;/span&gt;   &lt;span class="mf"&gt;192.29&lt;/span&gt;  &lt;span class="nx"&gt;factorial&lt;/span&gt;
-
-&lt;span class="nx"&gt;...&lt;/span&gt;
-
-&lt;span class="nx"&gt;granularity&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="nb"&gt;each&lt;/span&gt; &lt;span class="nx"&gt;sample&lt;/span&gt; &lt;span class="nx"&gt;hit&lt;/span&gt; &lt;span class="nx"&gt;covers&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt; &lt;span class="nx"&gt;byte&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;s&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="nb"&gt;for&lt;/span&gt; &lt;span class="mf"&gt;24.76&lt;/span&gt;&lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="nx"&gt;of&lt;/span&gt; &lt;span class="mf"&gt;0.04&lt;/span&gt; &lt;span class="nx"&gt;seconds&lt;/span&gt;
-
-&lt;span class="nb"&gt;index&lt;/span&gt; &lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="nb"&gt;time&lt;/span&gt;    &lt;span class="bp"&gt;self&lt;/span&gt;  &lt;span class="nb"&gt;children&lt;/span&gt;    &lt;span class="nx"&gt;called&lt;/span&gt;     &lt;span class="nb"&gt;name&lt;/span&gt;
-                             &lt;span class="mi"&gt;2100000&lt;/span&gt;             &lt;span class="nx"&gt;factorial&lt;/span&gt; &lt;span class="err"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="cp"&gt;]&lt;/span&gt;
-                0.04    0.00  210000/210000      main &lt;span class="cp"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="cp"&gt;]&lt;/span&gt;
-&lt;span class="cp"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="cp"&gt;]&lt;/span&gt;    100.0    0.04    0.00  210000+2100000 factorial &lt;span class="cp"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="cp"&gt;]&lt;/span&gt;
-                             2100000             factorial &lt;span class="cp"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="cp"&gt;]&lt;/span&gt;
------------------------------------------------
-                                                 &lt;span class="nt"&gt;&amp;lt;spontaneous&amp;gt;&lt;/span&gt;
-&lt;span class="cp"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="cp"&gt;]&lt;/span&gt;    100.0    0.00    0.04                 main &lt;span class="cp"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="cp"&gt;]&lt;/span&gt;
-                0.04    0.00  210000/210000      factorial &lt;span class="cp"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="cp"&gt;]&lt;/span&gt;
+&lt;span class="n"&gt;Each&lt;/span&gt; &lt;span class="n"&gt;sample&lt;/span&gt; &lt;span class="n"&gt;counts&lt;/span&gt; &lt;span class="n"&gt;as&lt;/span&gt; &lt;span class="mf"&gt;0.01&lt;/span&gt; &lt;span class="n"&gt;seconds&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;
+  &lt;span class="o"&gt;%&lt;/span&gt;   &lt;span class="n"&gt;cumulative&lt;/span&gt;   &lt;span class="n"&gt;self&lt;/span&gt;              &lt;span class="n"&gt;self&lt;/span&gt;     &lt;span class="n"&gt;total&lt;/span&gt;           
+ &lt;span class="n"&gt;time&lt;/span&gt;   &lt;span class="n"&gt;seconds&lt;/span&gt;   &lt;span class="n"&gt;seconds&lt;/span&gt;    &lt;span class="n"&gt;calls&lt;/span&gt;  &lt;span class="n"&gt;ns&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;call&lt;/span&gt;  &lt;span class="n"&gt;ns&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;call&lt;/span&gt;  &lt;span class="n"&gt;name&lt;/span&gt;    
+&lt;span class="mf"&gt;100.95&lt;/span&gt;      &lt;span class="mf"&gt;0.04&lt;/span&gt;     &lt;span class="mf"&gt;0.04&lt;/span&gt;   &lt;span class="mi"&gt;210000&lt;/span&gt;   &lt;span class="mf"&gt;192.29&lt;/span&gt;   &lt;span class="mf"&gt;192.29&lt;/span&gt;  &lt;span class="n"&gt;factorial&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;</summary></entry></feed>

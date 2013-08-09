@@ -118,26 +118,12 @@
 
 
 <p>Check out 'profile.log' and, eventually, you can see the statistics of this demo program.</p>
-<div class="codehilite"><pre><span class="nx">Flat</span> <span class="nx">profile</span><span class="p">:</span>
+<div class="codehilite"><pre><span class="n">Flat</span> <span class="n">profile</span><span class="o">:</span>
 
-<span class="nb">Each</span> <span class="nx">sample</span> <span class="nx">counts</span> <span class="nx">as</span> <span class="mf">0.01</span> <span class="nx">seconds.</span>
-  <span class="o">%</span>   <span class="nx">cumulative</span>   <span class="bp">self</span>              <span class="bp">self</span>     <span class="nx">total</span>           
- <span class="nb">time</span>   <span class="nx">seconds</span>   <span class="nx">seconds</span>    <span class="nx">calls</span>  <span class="nx">ns</span><span class="p">/</span><span class="nb">call</span>  <span class="nx">ns</span><span class="p">/</span><span class="nb">call</span>  <span class="nb">name</span>    
-<span class="mf">100.95</span>      <span class="mf">0.04</span>     <span class="mf">0.04</span>   <span class="mi">210000</span>   <span class="mf">192.29</span>   <span class="mf">192.29</span>  <span class="nx">factorial</span>
-
-<span class="nx">...</span>
-
-<span class="nx">granularity</span><span class="p">:</span> <span class="nb">each</span> <span class="nx">sample</span> <span class="nx">hit</span> <span class="nx">covers</span> <span class="mi">2</span> <span class="nx">byte</span><span class="p">(</span><span class="nb">s</span><span class="p">)</span> <span class="nb">for</span> <span class="mf">24.76</span><span class="o">%</span> <span class="nx">of</span> <span class="mf">0.04</span> <span class="nx">seconds</span>
-
-<span class="nb">index</span> <span class="o">%</span> <span class="nb">time</span>    <span class="bp">self</span>  <span class="nb">children</span>    <span class="nx">called</span>     <span class="nb">name</span>
-                             <span class="mi">2100000</span>             <span class="nx">factorial</span> <span class="err">[</span><span class="mi">1</span><span class="cp">]</span>
-                0.04    0.00  210000/210000      main <span class="cp">[</span><span class="mi">2</span><span class="cp">]</span>
-<span class="cp">[</span><span class="mi">1</span><span class="cp">]</span>    100.0    0.04    0.00  210000+2100000 factorial <span class="cp">[</span><span class="mi">1</span><span class="cp">]</span>
-                             2100000             factorial <span class="cp">[</span><span class="mi">1</span><span class="cp">]</span>
------------------------------------------------
-                                                 <span class="nt">&lt;spontaneous&gt;</span>
-<span class="cp">[</span><span class="mi">2</span><span class="cp">]</span>    100.0    0.00    0.04                 main <span class="cp">[</span><span class="mi">2</span><span class="cp">]</span>
-                0.04    0.00  210000/210000      factorial <span class="cp">[</span><span class="mi">1</span><span class="cp">]</span>
+<span class="n">Each</span> <span class="n">sample</span> <span class="n">counts</span> <span class="n">as</span> <span class="mf">0.01</span> <span class="n">seconds</span><span class="p">.</span>
+  <span class="o">%</span>   <span class="n">cumulative</span>   <span class="n">self</span>              <span class="n">self</span>     <span class="n">total</span>           
+ <span class="n">time</span>   <span class="n">seconds</span>   <span class="n">seconds</span>    <span class="n">calls</span>  <span class="n">ns</span><span class="o">/</span><span class="n">call</span>  <span class="n">ns</span><span class="o">/</span><span class="n">call</span>  <span class="n">name</span>    
+<span class="mf">100.95</span>      <span class="mf">0.04</span>     <span class="mf">0.04</span>   <span class="mi">210000</span>   <span class="mf">192.29</span>   <span class="mf">192.29</span>  <span class="n">factorial</span>
 </pre></div>
 </article>
 
