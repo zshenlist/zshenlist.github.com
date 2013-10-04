@@ -29,7 +29,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-        <title>MEMOLIST</title>
+        <title>MEMOLIST : Re-direct Shell Outputs in Python</title>
         <meta charset="utf-8" />
         <link rel="stylesheet" href="./theme/css/main.css" type="text/css" />
         <link href="./feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="MEMOLIST ATOM Feed" />
@@ -50,18 +50,13 @@
 <body>
 
                 
-
-            
-
-        
-        
-            <header>
-                <h1><a href="." id="site-title">MEMOLIST </a> : <a href="./2013_10_04_p0.html" id="page-title">Re-direct Shell Outputs in Python</a></h1>
-                <time datetime="2013-10-04T00:00:00">2013 十月 04 星期五</time>
-            </header>
-
-            <article>
-                <h1>Re-direct Shell Outputs in Python</h1>
+<header>
+    <h1><a href="." id="site-title">MEMOLIST </a> :
+        <a href="./2013_10_04_p0.html" id="page-title">Re-direct Shell Outputs in Python</a></h1>
+    <time datetime="2013-10-04T00:00:00">2013 十月 04 星期五</time>
+</header>
+<article>
+    <h1>Re-direct Shell Outputs in Python</h1>
 <p>Python works pretty well as logic glue. If you have several command-line (CLI) programs, python can make them cooperate efficiently. Say, it can launch those CLI programs at background and then display or pass their outputs to the front-end (e.g. GUI, files, sockets, and so forth). This article demos how to re-direct CLI shell outputs to a front-end GUI in Python.</p>
 <h2>Subprocess + Pipe</h2>
 <p>'Subprocess.Popen()' will first re-spawn a sub-process (CLI program) and then establish an anonymous pipe to intercept its shell outputs.</p>
@@ -144,32 +139,33 @@
 </pre></div>
 </td></tr></table>
 
-<p><img alt="shell outputs redirection" src="static/images/2013_10_04_p0f0.png" /></p><p>There are <a href="./2013_10_04_p0.html#disqus_thread">comments</a>.</p>
-            </article>
-            
-                <section id="article-list">
-                    <h2>All posts</h2>
-                    <ol>
-            
-        
-        
-        
+<p><img alt="shell outputs redirection" src="static/images/2013_10_04_p0f0.png" /></p>
+</article>
 
-        
-         
-            <li><a href="./2013_08_08_p0.html" rel="bookmark" title="Permalink to Profiling Tips">Profiling Tips</a></li>
-        
-        
-
-        
-         
-            <li><a href="./2013_07_27_p0.html" rel="bookmark" title="Permalink to Blog on GitHub Pages">Blog on GitHub Pages</a></li>
-        
-
-    
-    </ol>
-    </section><!-- #article-list -->
-
+    <div class="blogItem">
+    <h2>Comments</h2>
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_shortname = 'memolistcomments';
+        (function() {
+            var dsq = document.createElement('script');
+            dsq.type = 'text/javascript';
+            dsq.async = true;
+            dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] ||
+             document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>
+        Please enable JavaScript to view the
+        <a href="http://disqus.com/?ref_noscript=memolistcomments">
+			comments powered by Disqus.
+        </a>
+    </noscript>
+    <a href="http://disqus.com" class="dsq-brlink">
+        blog comments powered by <span class="logo-disqus">Disqus</span>
+    </a>
+    </div>
 
 
 

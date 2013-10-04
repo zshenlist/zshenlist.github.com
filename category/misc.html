@@ -56,69 +56,114 @@
         
         
             <header>
-                <h1><a href="../." id="site-title">MEMOLIST </a> : <a href=".././2013_07_27_p0.html" id="page-title">Blog on GitHub Pages</a></h1>
-                <time datetime="2013-07-27T00:00:00">2013 七月 27 星期六</time>
+                <h1><a href="../." id="site-title">MEMOLIST </a> : <a href=".././2013_10_04_p0.html" id="page-title">Re-direct Shell Outputs in Python</a></h1>
+                <time datetime="2013-10-04T00:00:00">2013 十月 04 星期五</time>
             </header>
 
             <article>
-                <h1>Blog on GitHub Pages</h1>
-<p>As a record, this post demos how this blog was published on GitHub pages. The steps below were performed on Ubuntu 10.10.</p>
-<h2>Stage 0: Blog Construction</h2>
-<p>Make sure your machine has <a href="http://en.wikipedia.org/wiki/Pip_(package_manager)">pip</a> installed. Installation of <a href="http://en.wikipedia.org/wiki/Markdown">markdown</a> and <a href="http://docs.getpelican.com/">pelican</a>:</p>
-<div class="codehilite"><pre><span class="err">$</span> <span class="n">sudo</span> <span class="n">pip</span> <span class="n">install</span> <span class="n">markdown</span>
-<span class="err">$</span> <span class="n">sudo</span> <span class="n">pip</span> <span class="n">install</span> <span class="n">pelican</span>
+                <h1>Re-direct Shell Outputs in Python</h1>
+<p>Python works pretty well as logic glue. If you have several command-line (CLI) programs, python can make them cooperate efficiently. Say, it can launch those CLI programs at background and then display or pass their outputs to the front-end (e.g. GUI, files, sockets, and so forth). This article demos how to re-direct CLI shell outputs to a front-end GUI in Python.</p>
+<h2>Subprocess + Pipe</h2>
+<p>'Subprocess.Popen()' will first re-spawn a sub-process (CLI program) and then establish an anonymous pipe to intercept its shell outputs.</p>
+<div class="codehilite"><pre><span class="n">import</span> <span class="n">subprocess</span>
+<span class="cp"># re-spawn sub-process &#39;make clean&#39; and setup its pipe</span>
+<span class="n">task</span> <span class="o">=</span> <span class="n">subprocess</span><span class="p">.</span><span class="n">Popen</span><span class="p">([</span><span class="err">&#39;</span><span class="n">make</span><span class="err">&#39;</span><span class="p">,</span> <span class="err">&#39;</span><span class="n">clean</span><span class="err">&#39;</span><span class="p">],</span> <span class="n">stdout</span> <span class="o">=</span> <span class="n">subprocess</span><span class="p">.</span><span class="n">PIPE</span><span class="p">)</span>
+<span class="cp"># obtain shell outputs in &#39;msg&#39; and any error messages in &#39;err&#39;</span>
+<span class="n">msg</span><span class="p">,</span> <span class="n">err</span> <span class="o">=</span> <span class="n">task</span><span class="p">.</span><span class="n">communicate</span><span class="p">()</span>
+<span class="n">print</span> <span class="err">&#39;</span><span class="n">re</span><span class="o">-</span><span class="n">direct</span> <span class="n">shell</span> <span class="n">outputs</span><span class="o">:</span><span class="err">\</span><span class="n">n</span><span class="o">%</span><span class="n">s</span><span class="err">&#39;</span> <span class="o">%</span><span class="n">msg</span>
 </pre></div>
 
 
-<p>Create a folder as your local blog home. Run pelican-quickstart there:</p>
-<div class="codehilite"><pre><span class="err">$</span> <span class="n">pelican</span><span class="o">-</span><span class="n">quickstart</span>
+<h2>Commands API</h2>
+<p>'commands.getstatusoutput()' follows almost the same manner as the previous method. It returns with calling status (e.g. any errors or warnings) as well.</p>
+<div class="codehilite"><pre><span class="n">import</span> <span class="n">commands</span>
+<span class="n">status</span><span class="p">,</span> <span class="n">outputs</span> <span class="o">=</span> <span class="n">commands</span><span class="p">.</span><span class="n">getstatusoutput</span><span class="p">(</span><span class="err">&#39;</span><span class="n">make</span> <span class="n">clean</span><span class="err">&#39;</span><span class="p">)</span>
+<span class="n">print</span> <span class="err">&#39;</span><span class="n">re</span><span class="o">-</span><span class="n">direct</span> <span class="n">shell</span> <span class="n">outputs</span><span class="o">:</span><span class="err">\</span><span class="n">n</span><span class="o">%</span><span class="n">s</span><span class="err">&#39;</span> <span class="o">%</span><span class="n">outputs</span>
 </pre></div>
 
 
-<p>Checkout the folder. A couple of files (e.g. Makefile) and subfolders should appear.</p>
-<p><img alt="pelican blog tree (ver. 2)" src="../static/images/2013_07_27_p0f0.png" /></p>
-<p>Edit your makrdown source files as usual. When completed, drop them into your blog home's subfolder 'src' (pelican ver. 2) or 'content' (pelican ver. 3). Let's build up the blog in the terminal:</p>
-<div class="codehilite"><pre><span class="err">$</span> <span class="n">make</span>
+<h2>GUI front-end</h2>
+<p>Demo code showing shell outputs redirection from 'uname -om' to wxPython front-end:</p>
+<table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29</pre></div></td><td class="code"><div class="codehilite"><pre><span class="c">#!/usr/bin/env python</span>
+<span class="c"># Filename: redirect.py</span>
+
+<span class="kn">import</span> <span class="nn">wx</span>
+<span class="kn">import</span> <span class="nn">subprocess</span>
+
+<span class="k">class</span> <span class="nc">my_frame</span><span class="p">(</span><span class="n">wx</span><span class="o">.</span><span class="n">Frame</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">title</span><span class="p">):</span>
+        <span class="n">wx</span><span class="o">.</span><span class="n">Frame</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">title</span> <span class="o">=</span> <span class="n">title</span><span class="p">,</span> <span class="n">size</span> <span class="o">=</span> <span class="p">(</span><span class="mi">320</span><span class="p">,</span> <span class="mi">160</span><span class="p">))</span>
+        <span class="n">panel</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">Panel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">wx</span><span class="o">.</span><span class="n">ID_ANY</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">btn_test</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">Button</span><span class="p">(</span><span class="n">panel</span><span class="p">,</span> <span class="n">label</span> <span class="o">=</span> <span class="s">&#39;re-direct&#39;</span><span class="p">,</span> \
+                <span class="n">pos</span> <span class="o">=</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span> <span class="n">size</span> <span class="o">=</span> <span class="p">(</span><span class="mi">90</span><span class="p">,</span> <span class="mi">25</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">disp_box</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">TextCtrl</span><span class="p">(</span><span class="n">panel</span><span class="p">,</span> <span class="n">pos</span> <span class="o">=</span> <span class="p">(</span><span class="mi">110</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span> \
+                <span class="n">size</span> <span class="o">=</span> <span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="mi">140</span><span class="p">),</span> <span class="n">style</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">TE_MULTILINE</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Bind</span><span class="p">(</span><span class="n">wx</span><span class="o">.</span><span class="n">EVT_BUTTON</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">OnReDirect</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">btn_test</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Show</span><span class="p">(</span><span class="bp">True</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">OnReDirect</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">disp_box</span><span class="o">.</span><span class="n">SetValue</span><span class="p">(</span><span class="s">&#39;&#39;</span><span class="p">)</span>
+        <span class="n">task</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">([</span><span class="s">&#39;uname&#39;</span><span class="p">,</span> <span class="s">&#39;-om&#39;</span><span class="p">],</span> \
+                <span class="n">stdout</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">)</span>
+        <span class="n">msg</span><span class="p">,</span> <span class="n">err</span> <span class="o">=</span> <span class="n">task</span><span class="o">.</span><span class="n">communicate</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">disp_box</span><span class="o">.</span><span class="n">AppendText</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">app</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">App</span><span class="p">()</span>
+    <span class="n">frame</span> <span class="o">=</span> <span class="n">my_frame</span><span class="p">(</span><span class="bp">None</span><span class="p">,</span> <span class="s">&#39;re-direct&#39;</span><span class="p">)</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">MainLoop</span><span class="p">()</span>
 </pre></div>
+</td></tr></table>
 
-
-<p>Open your browser and review your local blog at 'output/index.html'.</p>
-<h2>Stage 1: Publish on GitHub Pages</h2>
-<p>Make sure your machine has <a href="http://git-scm.com/">git</a> installed. <a href="https://github.com/davisp/ghp-import">ghp-import</a> is needed as well.</p>
-<div class="codehilite"><pre><span class="err">$</span> <span class="n">sudo</span> <span class="n">pip</span> <span class="n">install</span> <span class="n">ghp</span><span class="o">-</span><span class="n">import</span>
-</pre></div>
-
-
-<p>To make things easier, create a branch (say, <em>source</em>) to save source files including markdown and config scripts. The master branch can be used to save subfolder 'output'.</p>
-<div class="codehilite"><pre><span class="err">$</span> <span class="n">cd</span> <span class="n">your_local_blog_home</span>
-<span class="err">$</span> <span class="n">git</span> <span class="n">init</span>
-<span class="err">$</span> <span class="n">git</span> <span class="n">add</span> <span class="n">output</span>
-<span class="err">$</span> <span class="n">git</span> <span class="n">commit</span> <span class="o">-</span><span class="n">m</span> <span class="s">&quot;master init&quot;</span>
-<span class="err">$</span> <span class="n">git</span> <span class="n">checkout</span> <span class="o">-</span><span class="n">b</span> <span class="n">source</span>
-<span class="err">$</span> <span class="n">git</span> <span class="n">add</span> <span class="n">Makefile</span> <span class="n">pelican</span><span class="p">.</span><span class="n">conf</span><span class="p">.</span><span class="n">py</span> <span class="n">src</span>
-<span class="err">$</span> <span class="n">git</span> <span class="n">commit</span> <span class="o">-</span><span class="n">m</span> <span class="s">&quot;source init&quot;</span>
-</pre></div>
-
-
-<p>It's time for ghp-import. Edit the Makefile like this:</p>
-<div class="codehilite"><pre><span class="n">github</span><span class="o">:</span> <span class="n">html</span>
-    <span class="n">ghp</span><span class="o">-</span><span class="k">import</span> <span class="nn">$</span><span class="o">{</span><span class="n">OUTPUTDIR</span><span class="o">}</span>
-    <span class="n">git</span> <span class="n">push</span> <span class="n">origin</span> <span class="o">-</span><span class="n">f</span> <span class="n">gh</span><span class="o">-</span><span class="n">pages</span><span class="o">:</span><span class="n">master</span>
-</pre></div>
-
-
-<p>'ghp-import' will write a commit of folder 'output' to a local branch 'gh-pages'. To publish your blog, just push 'gh-pages' to GitHub as your remote master branch. Now, you can simply deploy your blog on GitHub pages using the last command:</p>
-<div class="codehilite"><pre><span class="err">$</span> <span class="n">make</span> <span class="n">github</span>
-</pre></div>
-
-
-<p>Happy blogging :)</p><p>There are <a href=".././2013_07_27_p0.html#disqus_thread">comments</a>.</p>
+<p><img alt="shell outputs redirection" src="../static/images/2013_10_04_p0f0.png" /></p><p>There are <a href=".././2013_10_04_p0.html#disqus_thread">comments</a>.</p>
             </article>
+            
+                <section id="article-list">
+                    <h2>All posts</h2>
+                    <ol>
             
         
         
+        
+
+        
+         
+            <li><a href=".././2013_07_27_p0.html" rel="bookmark" title="Permalink to Blog on GitHub Pages">Blog on GitHub Pages</a></li>
+        
 
     
+    </ol>
+    </section><!-- #article-list -->
+
 
 
 
