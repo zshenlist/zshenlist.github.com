@@ -56,179 +56,16 @@
         
         
             <header>
-                <h1><a href="../." id="site-title">MEMOLIST </a> : <a href=".././2013_10_29_p0.html" id="page-title">Re-direct Shell Outputs in wxpython</a></h1>
-                <time datetime="2013-10-29T00:00:00">2013 十月 29 星期二</time>
+                <h1><a href="../." id="site-title">MEMOLIST </a> : <a href=".././2015_05_09_p0.html" id="page-title">Merging PDF Files</a></h1>
+                <time datetime="2015-05-09T00:00:00">2015 五月 09 星期六</time>
             </header>
 
             <article>
-                <h1>Re-direct Shell Outputs in wxpython</h1>
-<p>Refer this <a href="http://zshenlist.github.io/2013_10_04_p0.html">post</a> to re-direct shell outputs in common python scripts. If using wxpython, more efforts are required to resolve the issue that wxWidget GUI does not receive any shell outputs until the child process is completed. Even if configuring the pipe as line buffered, the same problem persists.</p>
-<div class="codehilite"><pre><span class="cp"># bufsize = 1 means line buffered</span>
-<span class="n">task</span> <span class="o">=</span> <span class="n">subprocess</span><span class="p">.</span><span class="n">Popen</span><span class="p">(...,</span> <span class="n">bufsize</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="p">...)</span>
-</pre></div>
-
-
-<p>To display real-time shell outputs in wxpython, one solution is to embed GUI callback functions in threads. wxpython provides a function 'wx.CallAfter(...)' to enable this idea. For more details about 'wx.CallAfter(...)', google this function or refer to <a href="https://github.com/freephys/wxPython-In-Action/blob/master/Chapter-18/worker_threads.py">'wxpython in action' examples</a>. In short, the following source code demos how to implement the idea.</p>
-<table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
- 2
- 3
- 4
- 5
- 6
- 7
- 8
- 9
-10
-11
-12
-13
-14
-15
-16
-17
-18
-19
-20
-21
-22
-23
-24
-25
-26
-27
-28
-29
-30
-31
-32
-33
-34
-35
-36
-37
-38
-39
-40
-41
-42
-43
-44
-45
-46
-47
-48
-49
-50
-51
-52
-53
-54
-55
-56
-57
-58
-59
-60
-61
-62
-63
-64
-65
-66
-67
-68
-69
-70
-71
-72
-73
-74
-75
-76
-77
-78</pre></div></td><td class="code"><div class="codehilite"><pre><span class="c">#!/usr/bin/env python</span>
-<span class="kn">import</span> <span class="nn">wx</span>
-<span class="kn">import</span> <span class="nn">subprocess</span>
-<span class="kn">import</span> <span class="nn">threading</span>
-
-<span class="k">class</span> <span class="nc">my_thread</span><span class="p">(</span><span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">):</span>
-
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">wnd</span><span class="p">,</span> <span class="n">cmd</span><span class="p">):</span>
-        <span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">wnd</span> <span class="o">=</span> <span class="n">wnd</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">cmd</span> <span class="o">=</span> <span class="n">cmd</span>
-
-    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">wx</span><span class="o">.</span><span class="n">CallAfter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wnd</span><span class="o">.</span><span class="n">on_edt_set</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">cmd</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
-        <span class="c"># task assignment</span>
-        <span class="n">task</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cmd</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39; &#39;</span><span class="p">),</span> \
-                                <span class="n">stdout</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span> \
-                                <span class="n">stderr</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">STDOUT</span><span class="p">,</span> \
-                                <span class="n">shell</span> <span class="o">=</span> <span class="bp">False</span><span class="p">)</span>
-        <span class="c"># line buffer reading</span>
-        <span class="k">while</span> <span class="n">task</span><span class="o">.</span><span class="n">poll</span><span class="p">()</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
-            <span class="n">line</span> <span class="o">=</span> <span class="n">task</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span>
-            <span class="n">wx</span><span class="o">.</span><span class="n">CallAfter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wnd</span><span class="o">.</span><span class="n">on_edt_add</span><span class="p">,</span> <span class="n">line</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
-        <span class="c"># flush</span>
-        <span class="n">line</span> <span class="o">=</span> <span class="n">task</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
-        <span class="n">wx</span><span class="o">.</span><span class="n">CallAfter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wnd</span><span class="o">.</span><span class="n">on_edt_add</span><span class="p">,</span> <span class="n">line</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
-        <span class="c"># return code</span>
-        <span class="n">wx</span><span class="o">.</span><span class="n">CallAfter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wnd</span><span class="o">.</span><span class="n">on_edt_line</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
-        <span class="n">rtn</span> <span class="o">=</span> <span class="s">&#39;return code:</span><span class="se">\t</span><span class="si">%d</span><span class="s">&#39;</span> <span class="o">%</span><span class="n">task</span><span class="o">.</span><span class="n">returncode</span>
-        <span class="n">wx</span><span class="o">.</span><span class="n">CallAfter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wnd</span><span class="o">.</span><span class="n">on_edt_add</span><span class="p">,</span> <span class="n">rtn</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
-        <span class="c"># enable the button</span>
-        <span class="n">wx</span><span class="o">.</span><span class="n">CallAfter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wnd</span><span class="o">.</span><span class="n">on_btn_enb</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
-
-<span class="n">frm_sz</span> <span class="o">=</span> <span class="p">(</span><span class="mi">400</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
-<span class="n">btn_sz</span> <span class="o">=</span> <span class="p">(</span><span class="mi">90</span><span class="p">,</span> <span class="mi">30</span><span class="p">)</span>
-<span class="n">edt_sz</span> <span class="o">=</span> <span class="p">(</span><span class="mi">280</span><span class="p">,</span> <span class="mi">180</span><span class="p">)</span>
-
-<span class="k">class</span> <span class="nc">my_frame</span><span class="p">(</span><span class="n">wx</span><span class="o">.</span><span class="n">Frame</span><span class="p">):</span>
-
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">title</span><span class="p">):</span>
-        <span class="n">wx</span><span class="o">.</span><span class="n">Frame</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span><span class="p">,</span> <span class="n">title</span> <span class="o">=</span> <span class="n">title</span><span class="p">,</span> <span class="n">size</span> <span class="o">=</span> <span class="n">frm_sz</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">panel</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">Panel</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">btn_run</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">Button</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">panel</span><span class="p">,</span> <span class="n">size</span> <span class="o">=</span> <span class="n">btn_sz</span><span class="p">,</span> <span class="n">label</span> <span class="o">=</span> <span class="s">&#39;run&#39;</span><span class="p">,</span> \
-                                 <span class="n">pos</span> <span class="o">=</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">btn_grp</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">btn_run</span><span class="p">,</span> <span class="p">]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">edt_out</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">TextCtrl</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">panel</span><span class="p">,</span> <span class="n">size</span> <span class="o">=</span> <span class="n">edt_sz</span><span class="p">,</span> \
-                                    <span class="n">pos</span> <span class="o">=</span> <span class="p">(</span><span class="mi">110</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span> \
-                                    <span class="n">style</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">TE_MULTILINE</span> <span class="o">|</span> <span class="n">wx</span><span class="o">.</span><span class="n">TE_READONLY</span><span class="p">)</span>
-        <span class="n">font</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">Font</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="n">wx</span><span class="o">.</span><span class="n">MODERN</span><span class="p">,</span> <span class="n">wx</span><span class="o">.</span><span class="n">NORMAL</span><span class="p">,</span> <span class="n">wx</span><span class="o">.</span><span class="n">NORMAL</span><span class="p">,</span> <span class="bp">False</span><span class="p">,</span> <span class="s">u&#39;monospace&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">edt_out</span><span class="o">.</span><span class="n">SetFont</span><span class="p">(</span><span class="n">font</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">Bind</span><span class="p">(</span><span class="n">wx</span><span class="o">.</span><span class="n">EVT_BUTTON</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">on_btn_run</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">btn_run</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">Show</span><span class="p">(</span><span class="bp">True</span><span class="p">)</span>
-
-    <span class="k">def</span> <span class="nf">on_btn_run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">btn_run</span><span class="o">.</span><span class="n">Disable</span><span class="p">()</span>
-        <span class="n">thread</span> <span class="o">=</span> <span class="n">my_thread</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s">&#39;lsb_release -a&#39;</span><span class="p">)</span>
-        <span class="n">thread</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
-
-    <span class="k">def</span> <span class="nf">on_edt_set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
-        <span class="n">line</span> <span class="o">=</span> <span class="s">&#39;&gt;&gt; </span><span class="si">%s</span><span class="se">\n</span><span class="s">&#39;</span> <span class="o">%</span><span class="n">msg</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">edt_out</span><span class="o">.</span><span class="n">SetValue</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">on_edt_line</span><span class="p">(</span><span class="bp">None</span><span class="p">)</span>
-
-    <span class="k">def</span> <span class="nf">on_edt_add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">edt_out</span><span class="o">.</span><span class="n">AppendText</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
-
-    <span class="k">def</span> <span class="nf">on_btn_enb</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
-        <span class="k">for</span> <span class="n">btn</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">btn_grp</span><span class="p">:</span>
-            <span class="n">btn</span><span class="o">.</span><span class="n">Enable</span><span class="p">()</span>
-
-    <span class="k">def</span> <span class="nf">on_edt_line</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
-        <span class="n">line</span> <span class="o">=</span> <span class="s">&#39;</span><span class="si">%s</span><span class="se">\n</span><span class="s">&#39;</span> <span class="o">%</span><span class="p">(</span><span class="s">&#39;-&#39;</span><span class="o">*</span><span class="mi">32</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">edt_out</span><span class="o">.</span><span class="n">AppendText</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
-
-<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>
-    <span class="n">app</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">App</span><span class="p">()</span>
-    <span class="n">frame</span> <span class="o">=</span> <span class="n">my_frame</span><span class="p">(</span><span class="bp">None</span><span class="p">,</span> <span class="s">&#39;wrapper&#39;</span><span class="p">)</span>
-    <span class="n">app</span><span class="o">.</span><span class="n">MainLoop</span><span class="p">()</span>
-</pre></div>
-</td></tr></table>
-
-<p>Here is the result:</p>
-<p><img alt="shell outputs redirection" src="../static/images/2013_10_29_p0f0.png" /></p><p>There are <a href=".././2013_10_29_p0.html#disqus_thread">comments</a>.</p>
+                <h1>Merging PDF Files</h1>
+<p>Make sure <a href="http://www.ghostscript.com/"><strong>Ghostscript</strong></a> has been installed on the machine. Run <em>'gs -v'</em> in a console to check this. <em>gs</em> can then be used to merge PDF files. </p>
+<p>Here is an example. I have five PDF files in the current folder: <em>a.pdf</em>, <em>b.pdf</em>, <em>c.pdf</em>, <em>d.pdf</em>, and <em>e.pdf</em>. They can be merged into one PDF file <em>f.pdf</em> in the same folder by the following command. </p>
+<div class="codehilite"><pre><span class="err">$</span> <span class="n">gs</span> <span class="o">-</span><span class="n">dNOPAUSE</span> <span class="o">-</span><span class="n">sDEVICE</span><span class="o">=</span><span class="n">pdfwrite</span> <span class="o">-</span><span class="n">sOUTPUTFILE</span><span class="o">=</span><span class="p">.</span><span class="o">/</span><span class="n">f</span><span class="p">.</span><span class="n">pdf</span> <span class="o">-</span><span class="n">dBATCH</span> <span class="n">a</span><span class="p">.</span><span class="n">pdf</span> <span class="n">b</span><span class="p">.</span><span class="n">pdf</span> <span class="n">c</span><span class="p">.</span><span class="n">pdf</span> <span class="n">d</span><span class="p">.</span><span class="n">pdf</span> <span class="n">e</span><span class="p">.</span><span class="n">pdf</span>
+</pre></div><p>There are <a href=".././2015_05_09_p0.html#disqus_thread">comments</a>.</p>
             </article>
             
                 <section id="article-list">
@@ -236,6 +73,12 @@
                     <ol>
             
         
+        
+        
+
+        
+         
+            <li><a href=".././2013_10_29_p0.html" rel="bookmark" title="Permalink to Re-direct Shell Outputs in wxpython">Re-direct Shell Outputs in wxpython</a></li>
         
         
 

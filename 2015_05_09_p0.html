@@ -29,7 +29,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-        <title>MEMOLIST</title>
+        <title>MEMOLIST : Merging PDF Files</title>
         <meta charset="utf-8" />
         <link rel="stylesheet" href="./theme/css/main.css" type="text/css" />
         <link href="./feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="MEMOLIST ATOM Feed" />
@@ -49,29 +49,45 @@
 
 <body>
 
-        
-<section id="content" class="body">
-<h1>Archives for MEMOLIST</h1>
+                
+<header>
+    <h1><a href="." id="site-title">MEMOLIST </a> :
+        <a href="./2015_05_09_p0.html" id="page-title">Merging PDF Files</a></h1>
+    <time datetime="2015-05-09T00:00:00">2015 五月 09 星期六</time>
+</header>
+<article>
+    <h1>Merging PDF Files</h1>
+<p>Make sure <a href="http://www.ghostscript.com/"><strong>Ghostscript</strong></a> has been installed on the machine. Run <em>'gs -v'</em> in a console to check this. <em>gs</em> can then be used to merge PDF files. </p>
+<p>Here is an example. I have five PDF files in the current folder: <em>a.pdf</em>, <em>b.pdf</em>, <em>c.pdf</em>, <em>d.pdf</em>, and <em>e.pdf</em>. They can be merged into one PDF file <em>f.pdf</em> in the same folder by the following command. </p>
+<div class="codehilite"><pre><span class="err">$</span> <span class="n">gs</span> <span class="o">-</span><span class="n">dNOPAUSE</span> <span class="o">-</span><span class="n">sDEVICE</span><span class="o">=</span><span class="n">pdfwrite</span> <span class="o">-</span><span class="n">sOUTPUTFILE</span><span class="o">=</span><span class="p">.</span><span class="o">/</span><span class="n">f</span><span class="p">.</span><span class="n">pdf</span> <span class="o">-</span><span class="n">dBATCH</span> <span class="n">a</span><span class="p">.</span><span class="n">pdf</span> <span class="n">b</span><span class="p">.</span><span class="n">pdf</span> <span class="n">c</span><span class="p">.</span><span class="n">pdf</span> <span class="n">d</span><span class="p">.</span><span class="n">pdf</span> <span class="n">e</span><span class="p">.</span><span class="n">pdf</span>
+</pre></div>
+</article>
 
-<dl>
+    <div class="blogItem">
+    <h2>Comments</h2>
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_shortname = 'memolistcomments';
+        (function() {
+            var dsq = document.createElement('script');
+            dsq.type = 'text/javascript';
+            dsq.async = true;
+            dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] ||
+             document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>
+        Please enable JavaScript to view the
+        <a href="http://disqus.com/?ref_noscript=memolistcomments">
+			comments powered by Disqus.
+        </a>
+    </noscript>
+    <a href="http://disqus.com" class="dsq-brlink">
+        blog comments powered by <span class="logo-disqus">Disqus</span>
+    </a>
+    </div>
 
-    <dt>2013 七月 27 星期六</dt>
-    <dd><a href='2013_07_27_p0.html'>Blog on GitHub Pages</a></dd>
-
-    <dt>2013 八月 09 星期五</dt>
-    <dd><a href='2013_08_08_p0.html'>Profiling Tips</a></dd>
-
-    <dt>2013 十月 04 星期五</dt>
-    <dd><a href='2013_10_04_p0.html'>Re-direct Shell Outputs in Python</a></dd>
-
-    <dt>2013 十月 29 星期二</dt>
-    <dd><a href='2013_10_29_p0.html'>Re-direct Shell Outputs in wxpython</a></dd>
-
-    <dt>2015 五月 09 星期六</dt>
-    <dd><a href='2015_05_09_p0.html'>Merging PDF Files</a></dd>
-
-</dl>
-</section>
 
 
         <footer>
