@@ -56,16 +56,126 @@
         
         
             <header>
-                <h1><a href="." id="site-title">MEMOLIST </a> : <a href="./2015_05_09_p0.html" id="page-title">Merging PDF Files</a></h1>
-                <time datetime="2015-05-09T00:00:00">2015 五月 09 星期六</time>
+                <h1><a href="." id="site-title">MEMOLIST </a> : <a href="./2015_08_02_p0.html" id="page-title">Header File Dependency in Makefile</a></h1>
+                <time datetime="2015-08-02T00:00:00">2015 八月 02 星期日</time>
             </header>
 
             <article>
-                <h1>Merging PDF Files</h1>
-<p>Make sure <a href="http://www.ghostscript.com/"><strong>Ghostscript</strong></a> has been installed on the machine. Run <em>'gs -v'</em> in a console to check this. <em>gs</em> can then be used to merge PDF files. </p>
-<p>Here is an example. I have five PDF files in the current folder: <em>a.pdf</em>, <em>b.pdf</em>, <em>c.pdf</em>, <em>d.pdf</em>, and <em>e.pdf</em>. They can be merged into one PDF file <em>f.pdf</em> in the same folder by the following command. </p>
-<div class="codehilite"><pre><span class="err">$</span> <span class="n">gs</span> <span class="o">-</span><span class="n">dNOPAUSE</span> <span class="o">-</span><span class="n">sDEVICE</span><span class="o">=</span><span class="n">pdfwrite</span> <span class="o">-</span><span class="n">sOUTPUTFILE</span><span class="o">=</span><span class="p">.</span><span class="o">/</span><span class="n">f</span><span class="p">.</span><span class="n">pdf</span> <span class="o">-</span><span class="n">dBATCH</span> <span class="n">a</span><span class="p">.</span><span class="n">pdf</span> <span class="n">b</span><span class="p">.</span><span class="n">pdf</span> <span class="n">c</span><span class="p">.</span><span class="n">pdf</span> <span class="n">d</span><span class="p">.</span><span class="n">pdf</span> <span class="n">e</span><span class="p">.</span><span class="n">pdf</span>
-</pre></div><p>There are <a href="./2015_05_09_p0.html#disqus_thread">comments</a>.</p>
+                <h1>Header File Dependency in Makefile</h1>
+<p>When any header files are changed, it is desired to recompile all the source files related to them. GNU make deals with this by <a href="http://make.mad-scientist.net/papers/advanced-auto-dependency-generation/">Auto-Dependency Generation</a>. The idea can be summarized as two steps.</p>
+<ol>
+<li>invoke gcc (option -MM) to derive header dependency of all the source files.</li>
+<li>add header dependency in Makefile to let GNU make detect header file changes.</li>
+</ol>
+<p>Let's take a look at the example. The following image shows how the demo project looks like.</p>
+<p><img alt="demo project" src="static/images/2015_08_02_p0f0.png" /></p>
+<p>All the source files and header files reside in subfolders 'src' and 'inc', respectively. Objective files (*.o) will be generated to subfolder 'obj'. Later, we'll find the dependecy files (*.d) here as well. As the final product, the binary executable file will be generated to subfolder 'bin'. </p>
+<h2>STEP ONE: GCC Auto-Dependency Generation</h2>
+<p>Call GCC like below to derive the dependency of 'src/aaa.c':</p>
+<div class="codehilite"><pre><span class="nv">$ </span>gcc -MM src/aaa.c -I./inc
+<span class="nv">$ </span>aaa.o: src/aaa.c inc/aaa.h inc/bbb.h
+</pre></div>
+
+
+<p>The output illustrates that 'aaa.o' depends on 'src/aaa.c' and header files 'inc/aaa.h' and 'inc/bbb.h'. We need to feed the dependency to Makefile and thus the output should be saved. GCC provides another option (-MMD) for this:</p>
+<div class="codehilite"><pre><span class="nv">$ </span>gcc -c src/aaa.c -MMD -I./inc -o obj/aaa.o -Wall
+<span class="nv">$ </span>cat obj/aaa.d
+<span class="nv">$ </span>obj/aaa.o: src/aaa.c inc/aaa.h inc/bbb.h
+</pre></div>
+
+
+<p>According to <a href="https://gcc.gnu.org/onlinedocs/gcc-3.3.5/gcc/Preprocessor-Options.html">GCC manual</a>, option '-MD' can be used to generate a dependency output file as a side-effect of the compilation process. Option '-MMD' works like '-MD' except metion only user header files, not system header files. From the console output, we know that 'obj/aaa.d' is the dependency output file. Wait, but we have not named it yet. So how did it come up with a name 'aaa.d' in subfolder 'obj'? <a href="https://gcc.gnu.org/onlinedocs/gcc-3.3.5/gcc/Preprocessor-Options.html">GCC manual</a> has the answer:</p>
+<blockquote>
+<p>The driver determines the file based on whether an -o option is given. 
+If it is, the driver uses its argument but with a suffix of .d, 
+otherwise it takes the basename of the input file and applies a .d suffix.</p>
+</blockquote>
+<p>We gave an -o option and thus GCC took the argument (obj/aaa.o) with a suffix of '.d' as the dependency output file name (obj/aaa.d).</p>
+<h2>STEP TWO: Makefile Updates</h2>
+<p>First off, we need to apply <strong>STEP ONE</strong> for every source file in the project. Makefile can achieve this easily:</p>
+<div class="codehilite"><pre><span class="nv">DIR_INC</span><span class="o">=</span>./inc
+<span class="nv">DIR_SRC</span><span class="o">=</span>./src
+<span class="nv">DIR_OBJ</span><span class="o">=</span>./obj
+<span class="nv">CC</span><span class="o">=</span>gcc
+<span class="nv">CFLAGS</span><span class="o">=</span>-I<span class="k">${</span><span class="nv">DIR_INC</span><span class="k">}</span> -MMD -MP
+<span class="c">#apply STEP ONE for every source file in ./src </span>
+<span class="k">${</span><span class="nv">DIR_OBJ</span><span class="k">}</span>/%.o: <span class="k">${</span><span class="nv">DIR_SRC</span><span class="k">}</span>/%.c
+    <span class="k">${</span><span class="nv">CC</span><span class="k">}</span> -c <span class="nv">$&lt;</span> <span class="k">${</span><span class="nv">CFLAGS</span><span class="k">}</span> -o <span class="nv">$@</span> -Wall
+</pre></div>
+
+
+<p>Take care that option '-MP' was added for CPP files. <a href="https://gcc.gnu.org/onlinedocs/gcc-3.3.5/gcc/Preprocessor-Options.html">GCC manual</a> has its details:</p>
+<blockquote>
+<p>This option instructs CPP to add a phony target for each dependency other than the main file, causing each to depend on nothing. 
+These dummy rules work around errors make gives if you remove header files without updating the Makefile to match.</p>
+</blockquote>
+<p>Now, it's time to feed those dependency files to Makefile:</p>
+<div class="codehilite"><pre><span class="nv">SRCS</span><span class="o">=</span><span class="k">$(</span>wildcard <span class="k">${</span><span class="nv">DIR_SRC</span><span class="k">}</span>/*.c<span class="k">)</span>                 <span class="c">#all *.c files</span>
+<span class="nv">DIRS</span><span class="o">=</span><span class="k">$(</span>notdir <span class="k">${</span><span class="nv">SRCS</span><span class="k">})</span>                          <span class="c">#get basenames</span>
+<span class="nv">OBJS</span><span class="o">=</span><span class="k">$(</span>patsubst %.c,<span class="k">${</span><span class="nv">DIR_OBJ</span><span class="k">}</span>/%.o,<span class="k">${</span><span class="nv">DIRS</span><span class="k">})</span>     <span class="c">#all *.o files</span>
+<span class="nv">DEPS</span><span class="o">=</span><span class="k">${</span><span class="nv">OBJS</span><span class="p">:%.o=%.d</span><span class="k">}</span>                            <span class="c">#all *.d files</span>
+<span class="c">#import the dependency files</span>
+-include <span class="k">${</span><span class="nv">DEPS</span><span class="k">}</span>
+</pre></div>
+
+
+<p>We need to add '-' ahead of 'include' as those dependency files do not exist before the first build. If not, GNU make will always terminate here because of the file missing. Indeed, we actually do not need those *.d files for the first build. They only make sense in the future when we change header files for the next build.</p>
+<p>That's it! Let's make the project:</p>
+<div class="codehilite"><pre><span class="nv">$ </span>make
+<span class="nv">$ </span>gcc -c src/aaa.c -g -I./inc -MMD -MP -o obj/aaa.o -Wall
+<span class="nv">$ </span>gcc -c src/bbb.c -g -I./inc -MMD -MP -o obj/bbb.o -Wall
+<span class="nv">$ </span>gcc -o bin/aaa -g obj/aaa.o obj/bbb.o -Wall
+<span class="nv">$ </span>Build Succeeded.
+</pre></div>
+
+
+<p>OK, give some changes to 'inc/aaa.h' and then rebuild the project:</p>
+<div class="codehilite"><pre><span class="nv">$ </span><span class="nb">echo</span> //dummy &gt;&gt; inc/aaa.h
+<span class="nv">$ </span>make
+<span class="nv">$ </span>gcc -c src/aaa.c -g -I./inc -MMD -MP -o obj/aaa.o -Wall
+<span class="nv">$ </span>gcc -o bin/aaa -g obj/aaa.o obj/bbb.o -Wall
+<span class="nv">$ </span>Build Succeeded.
+</pre></div>
+
+
+<p>Since 'inc/aaa.h' is not included in 'src/bbb.c' or 'inc/bbb.h', its change will not cause the recompilation of 'src/bbb.c'. Only 'src/aaa.c' needs to be recompiled. This confirms that our Makefile is able to detect header file changes and perform corresponding actions afterwards. </p>
+<h2>Complete Makefile</h2>
+<div class="codehilite"><pre><span class="nv">DIR_INC</span><span class="o">=</span>./inc
+<span class="nv">DIR_SRC</span><span class="o">=</span>./src
+<span class="nv">DIR_OBJ</span><span class="o">=</span>./obj
+<span class="nv">DIR_BIN</span><span class="o">=</span>./bin
+
+<span class="nv">CC</span><span class="o">=</span>gcc
+CFLAGS+<span class="o">=</span>-g -I./inc
+CFLAGS+<span class="o">=</span>-MMD -MP
+
+<span class="nv">EXEC</span><span class="o">=</span><span class="k">${</span><span class="nv">DIR_BIN</span><span class="k">}</span>/aaa
+<span class="nv">SRCS</span><span class="o">=</span><span class="k">$(</span>wildcard <span class="k">${</span><span class="nv">DIR_SRC</span><span class="k">}</span>/*.c<span class="k">)</span>
+<span class="nv">DIRS</span><span class="o">=</span><span class="k">$(</span>notdir <span class="k">${</span><span class="nv">SRCS</span><span class="k">})</span>
+<span class="nv">OBJS</span><span class="o">=</span><span class="k">$(</span>patsubst %.c,<span class="k">${</span><span class="nv">DIR_OBJ</span><span class="k">}</span>/%.o,<span class="k">${</span><span class="nv">DIRS</span><span class="k">})</span>
+<span class="nv">DEPS</span><span class="o">=</span><span class="k">${</span><span class="nv">OBJS</span><span class="p">:%.o=%.d</span><span class="k">}</span>
+
+all:    <span class="k">${</span><span class="nv">EXEC</span><span class="k">}</span>
+    @echo <span class="s2">&quot;Build Succeeded.&quot;</span>
+
+<span class="k">${</span><span class="nv">EXEC</span><span class="k">}</span>:    <span class="k">${</span><span class="nv">OBJS</span><span class="k">}</span>
+    <span class="k">${</span><span class="nv">CC</span><span class="k">}</span> -o <span class="nv">$@</span> -g <span class="nv">$^</span> -Wall
+
+<span class="k">${</span><span class="nv">DIR_OBJ</span><span class="k">}</span>/%.o: <span class="k">${</span><span class="nv">DIR_SRC</span><span class="k">}</span>/%.c
+    <span class="k">${</span><span class="nv">CC</span><span class="k">}</span> -c <span class="nv">$&lt;</span> <span class="k">${</span><span class="nv">CFLAGS</span><span class="k">}</span> -o <span class="nv">$@</span> -Wall
+
+-include <span class="k">${</span><span class="nv">DEPS</span><span class="k">}</span>
+
+.PHONY: run clean
+
+run:
+    <span class="k">${</span><span class="nv">EXEC</span><span class="k">}</span> &amp;
+
+clean:
+    -rm <span class="k">${</span><span class="nv">EXEC</span><span class="k">}</span>
+    -rm <span class="k">${</span><span class="nv">OBJS</span><span class="k">}</span>
+    -rm <span class="k">${</span><span class="nv">DEPS</span><span class="k">}</span>
+</pre></div><p>There are <a href="./2015_08_02_p0.html#disqus_thread">comments</a>.</p>
             </article>
             
                 <section id="article-list">
@@ -73,6 +183,12 @@
                     <ol>
             
         
+        
+        
+
+        
+         
+            <li><a href="./2015_05_09_p0.html" rel="bookmark" title="Permalink to Merging PDF Files">Merging PDF Files</a></li>
         
         
 

@@ -1,5 +1,119 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>MEMOLIST</title><link href="/" rel="alternate"></link><link href="//feeds/all.atom.xml" rel="self"></link><id>/</id><updated>2015-05-09T00:00:00-06:00</updated><entry><title>Merging PDF Files</title><link href="//2015_05_09_p0.html" rel="alternate"></link><updated>2015-05-09T00:00:00-06:00</updated><author><name>zshen</name></author><id>//2015_05_09_p0.html</id><summary type="html">&lt;h1&gt;Merging PDF Files&lt;/h1&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>MEMOLIST</title><link href="/" rel="alternate"></link><link href="//feeds/all.atom.xml" rel="self"></link><id>/</id><updated>2015-08-02T00:00:00-06:00</updated><entry><title>Header File Dependency in Makefile</title><link href="//2015_08_02_p0.html" rel="alternate"></link><updated>2015-08-02T00:00:00-06:00</updated><author><name>zshen</name></author><id>//2015_08_02_p0.html</id><summary type="html">&lt;h1&gt;Header File Dependency in Makefile&lt;/h1&gt;
+&lt;p&gt;When any header files are changed, it is desired to recompile all the source files related to them. GNU make deals with this by &lt;a href="http://make.mad-scientist.net/papers/advanced-auto-dependency-generation/"&gt;Auto-Dependency Generation&lt;/a&gt;. The idea can be summarized as two steps.&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;invoke gcc (option -MM) to derive header dependency of all the source files.&lt;/li&gt;
+&lt;li&gt;add header dependency in Makefile to let GNU make detect header file changes.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Let's take a look at the example. The following image shows how the demo project looks like.&lt;/p&gt;
+&lt;p&gt;&lt;img alt="demo project" src="images/2015_08_02_p0f0.png" /&gt;&lt;/p&gt;
+&lt;p&gt;All the source files and header files reside in subfolders 'src' and 'inc', respectively. Objective files (*.o) will be generated to subfolder 'obj'. Later, we'll find the dependecy files (*.d) here as well. As the final product, the binary executable file will be generated to subfolder 'bin'. &lt;/p&gt;
+&lt;h2&gt;STEP ONE: GCC Auto-Dependency Generation&lt;/h2&gt;
+&lt;p&gt;Call GCC like below to derive the dependency of 'src/aaa.c':&lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;gcc -MM src/aaa.c -I./inc
+&lt;span class="nv"&gt;$ &lt;/span&gt;aaa.o: src/aaa.c inc/aaa.h inc/bbb.h
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;The output illustrates that 'aaa.o' depends on 'src/aaa.c' and header files 'inc/aaa.h' and 'inc/bbb.h'. We need to feed the dependency to Makefile and thus the output should be saved. GCC provides another option (-MMD) for this:&lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;gcc -c src/aaa.c -MMD -I./inc -o obj/aaa.o -Wall
+&lt;span class="nv"&gt;$ &lt;/span&gt;cat obj/aaa.d
+&lt;span class="nv"&gt;$ &lt;/span&gt;obj/aaa.o: src/aaa.c inc/aaa.h inc/bbb.h
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;According to &lt;a href="https://gcc.gnu.org/onlinedocs/gcc-3.3.5/gcc/Preprocessor-Options.html"&gt;GCC manual&lt;/a&gt;, option '-MD' can be used to generate a dependency output file as a side-effect of the compilation process. Option '-MMD' works like '-MD' except metion only user header files, not system header files. From the console output, we know that 'obj/aaa.d' is the dependency output file. Wait, but we have not named it yet. So how did it come up with a name 'aaa.d' in subfolder 'obj'? &lt;a href="https://gcc.gnu.org/onlinedocs/gcc-3.3.5/gcc/Preprocessor-Options.html"&gt;GCC manual&lt;/a&gt; has the answer:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;The driver determines the file based on whether an -o option is given. 
+If it is, the driver uses its argument but with a suffix of .d, 
+otherwise it takes the basename of the input file and applies a .d suffix.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;We gave an -o option and thus GCC took the argument (obj/aaa.o) with a suffix of '.d' as the dependency output file name (obj/aaa.d).&lt;/p&gt;
+&lt;h2&gt;STEP TWO: Makefile Updates&lt;/h2&gt;
+&lt;p&gt;First off, we need to apply &lt;strong&gt;STEP ONE&lt;/strong&gt; for every source file in the project. Makefile can achieve this easily:&lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span class="nv"&gt;DIR_INC&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;./inc
+&lt;span class="nv"&gt;DIR_SRC&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;./src
+&lt;span class="nv"&gt;DIR_OBJ&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;./obj
+&lt;span class="nv"&gt;CC&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;gcc
+&lt;span class="nv"&gt;CFLAGS&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;-I&lt;span class="k"&gt;${&lt;/span&gt;&lt;span class="nv"&gt;DIR_INC&lt;/span&gt;&lt;span class="k"&gt;}&lt;/span&gt; -MMD -MP
+&lt;span class="c"&gt;#apply STEP ONE for every source file in ./src &lt;/span&gt;
+&lt;span class="k"&gt;${&lt;/span&gt;&lt;span class="nv"&gt;DIR_OBJ&lt;/span&gt;&lt;span class="k"&gt;}&lt;/span&gt;/%.o: &lt;span class="k"&gt;${&lt;/span&gt;&lt;span class="nv"&gt;DIR_SRC&lt;/span&gt;&lt;span class="k"&gt;}&lt;/span&gt;/%.c
+    &lt;span class="k"&gt;${&lt;/span&gt;&lt;span class="nv"&gt;CC&lt;/span&gt;&lt;span class="k"&gt;}&lt;/span&gt; -c &lt;span class="nv"&gt;$&amp;lt;&lt;/span&gt; &lt;span class="k"&gt;${&lt;/span&gt;&lt;span class="nv"&gt;CFLAGS&lt;/span&gt;&lt;span class="k"&gt;}&lt;/span&gt; -o &lt;span class="nv"&gt;$@&lt;/span&gt; -Wall
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Take care that option '-MP' was added for CPP files. &lt;a href="https://gcc.gnu.org/onlinedocs/gcc-3.3.5/gcc/Preprocessor-Options.html"&gt;GCC manual&lt;/a&gt; has its details:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;This option instructs CPP to add a phony target for each dependency other than the main file, causing each to depend on nothing. 
+These dummy rules work around errors make gives if you remove header files without updating the Makefile to match.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Now, it's time to feed those dependency files to Makefile:&lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span class="nv"&gt;SRCS&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="k"&gt;$(&lt;/span&gt;wildcard &lt;span class="k"&gt;${&lt;/span&gt;&lt;span class="nv"&gt;DIR_SRC&lt;/span&gt;&lt;span class="k"&gt;}&lt;/span&gt;/*.c&lt;span class="k"&gt;)&lt;/span&gt;                 &lt;span class="c"&gt;#all *.c files&lt;/span&gt;
+&lt;span class="nv"&gt;DIRS&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="k"&gt;$(&lt;/span&gt;notdir &lt;span class="k"&gt;${&lt;/span&gt;&lt;span class="nv"&gt;SRCS&lt;/span&gt;&lt;span class="k"&gt;})&lt;/span&gt;                          &lt;span class="c"&gt;#get basenames&lt;/span&gt;
+&lt;span class="nv"&gt;OBJS&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="k"&gt;$(&lt;/span&gt;patsubst %.c,&lt;span class="k"&gt;${&lt;/span&gt;&lt;span class="nv"&gt;DIR_OBJ&lt;/span&gt;&lt;span class="k"&gt;}&lt;/span&gt;/%.o,&lt;span class="k"&gt;${&lt;/span&gt;&lt;span class="nv"&gt;DIRS&lt;/span&gt;&lt;span class="k"&gt;})&lt;/span&gt;     &lt;span class="c"&gt;#all *.o files&lt;/span&gt;
+&lt;span class="nv"&gt;DEPS&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="k"&gt;${&lt;/span&gt;&lt;span class="nv"&gt;OBJS&lt;/span&gt;&lt;span class="p"&gt;:%.o=%.d&lt;/span&gt;&lt;span class="k"&gt;}&lt;/span&gt;                            &lt;span class="c"&gt;#all *.d files&lt;/span&gt;
+&lt;span class="c"&gt;#import the dependency files&lt;/span&gt;
+-include &lt;span class="k"&gt;${&lt;/span&gt;&lt;span class="nv"&gt;DEPS&lt;/span&gt;&lt;span class="k"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;We need to add '-' ahead of 'include' as those dependency files do not exist before the first build. If not, GNU make will always terminate here because of the file missing. Indeed, we actually do not need those *.d files for the first build. They only make sense in the future when we change header files for the next build.&lt;/p&gt;
+&lt;p&gt;That's it! Let's make the project:&lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;make
+&lt;span class="nv"&gt;$ &lt;/span&gt;gcc -c src/aaa.c -g -I./inc -MMD -MP -o obj/aaa.o -Wall
+&lt;span class="nv"&gt;$ &lt;/span&gt;gcc -c src/bbb.c -g -I./inc -MMD -MP -o obj/bbb.o -Wall
+&lt;span class="nv"&gt;$ &lt;/span&gt;gcc -o bin/aaa -g obj/aaa.o obj/bbb.o -Wall
+&lt;span class="nv"&gt;$ &lt;/span&gt;Build Succeeded.
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;OK, give some changes to 'inc/aaa.h' and then rebuild the project:&lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;&lt;span class="nb"&gt;echo&lt;/span&gt; //dummy &amp;gt;&amp;gt; inc/aaa.h
+&lt;span class="nv"&gt;$ &lt;/span&gt;make
+&lt;span class="nv"&gt;$ &lt;/span&gt;gcc -c src/aaa.c -g -I./inc -MMD -MP -o obj/aaa.o -Wall
+&lt;span class="nv"&gt;$ &lt;/span&gt;gcc -o bin/aaa -g obj/aaa.o obj/bbb.o -Wall
+&lt;span class="nv"&gt;$ &lt;/span&gt;Build Succeeded.
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Since 'inc/aaa.h' is not included in 'src/bbb.c' or 'inc/bbb.h', its change will not cause the recompilation of 'src/bbb.c'. Only 'src/aaa.c' needs to be recompiled. This confirms that our Makefile is able to detect header file changes and perform corresponding actions afterwards. &lt;/p&gt;
+&lt;h2&gt;Complete Makefile&lt;/h2&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span class="nv"&gt;DIR_INC&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;./inc
+&lt;span class="nv"&gt;DIR_SRC&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;./src
+&lt;span class="nv"&gt;DIR_OBJ&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;./obj
+&lt;span class="nv"&gt;DIR_BIN&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;./bin
+
+&lt;span class="nv"&gt;CC&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;gcc
+CFLAGS+&lt;span class="o"&gt;=&lt;/span&gt;-g -I./inc
+CFLAGS+&lt;span class="o"&gt;=&lt;/span&gt;-MMD -MP
+
+&lt;span class="nv"&gt;EXEC&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="k"&gt;${&lt;/span&gt;&lt;span class="nv"&gt;DIR_BIN&lt;/span&gt;&lt;span class="k"&gt;}&lt;/span&gt;/aaa
+&lt;span class="nv"&gt;SRCS&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="k"&gt;$(&lt;/span&gt;wildcard &lt;span class="k"&gt;${&lt;/span&gt;&lt;span class="nv"&gt;DIR_SRC&lt;/span&gt;&lt;span class="k"&gt;}&lt;/span&gt;/*.c&lt;span class="k"&gt;)&lt;/span&gt;
+&lt;span class="nv"&gt;DIRS&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="k"&gt;$(&lt;/span&gt;notdir &lt;span class="k"&gt;${&lt;/span&gt;&lt;span class="nv"&gt;SRCS&lt;/span&gt;&lt;span class="k"&gt;})&lt;/span&gt;
+&lt;span class="nv"&gt;OBJS&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="k"&gt;$(&lt;/span&gt;patsubst %.c,&lt;span class="k"&gt;${&lt;/span&gt;&lt;span class="nv"&gt;DIR_OBJ&lt;/span&gt;&lt;span class="k"&gt;}&lt;/span&gt;/%.o,&lt;span class="k"&gt;${&lt;/span&gt;&lt;span class="nv"&gt;DIRS&lt;/span&gt;&lt;span class="k"&gt;})&lt;/span&gt;
+&lt;span class="nv"&gt;DEPS&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="k"&gt;${&lt;/span&gt;&lt;span class="nv"&gt;OBJS&lt;/span&gt;&lt;span class="p"&gt;:%.o=%.d&lt;/span&gt;&lt;span class="k"&gt;}&lt;/span&gt;
+
+all:    &lt;span class="k"&gt;${&lt;/span&gt;&lt;span class="nv"&gt;EXEC&lt;/span&gt;&lt;span class="k"&gt;}&lt;/span&gt;
+    @echo &lt;span class="s2"&gt;&amp;quot;Build Succeeded.&amp;quot;&lt;/span&gt;
+
+&lt;span class="k"&gt;${&lt;/span&gt;&lt;span class="nv"&gt;EXEC&lt;/span&gt;&lt;span class="k"&gt;}&lt;/span&gt;:    &lt;span class="k"&gt;${&lt;/span&gt;&lt;span class="nv"&gt;OBJS&lt;/span&gt;&lt;span class="k"&gt;}&lt;/span&gt;
+    &lt;span class="k"&gt;${&lt;/span&gt;&lt;span class="nv"&gt;CC&lt;/span&gt;&lt;span class="k"&gt;}&lt;/span&gt; -o &lt;span class="nv"&gt;$@&lt;/span&gt; -g &lt;span class="nv"&gt;$^&lt;/span&gt; -Wall
+
+&lt;span class="k"&gt;${&lt;/span&gt;&lt;span class="nv"&gt;DIR_OBJ&lt;/span&gt;&lt;span class="k"&gt;}&lt;/span&gt;/%.o: &lt;span class="k"&gt;${&lt;/span&gt;&lt;span class="nv"&gt;DIR_SRC&lt;/span&gt;&lt;span class="k"&gt;}&lt;/span&gt;/%.c
+    &lt;span class="k"&gt;${&lt;/span&gt;&lt;span class="nv"&gt;CC&lt;/span&gt;&lt;span class="k"&gt;}&lt;/span&gt; -c &lt;span class="nv"&gt;$&amp;lt;&lt;/span&gt; &lt;span class="k"&gt;${&lt;/span&gt;&lt;span class="nv"&gt;CFLAGS&lt;/span&gt;&lt;span class="k"&gt;}&lt;/span&gt; -o &lt;span class="nv"&gt;$@&lt;/span&gt; -Wall
+
+-include &lt;span class="k"&gt;${&lt;/span&gt;&lt;span class="nv"&gt;DEPS&lt;/span&gt;&lt;span class="k"&gt;}&lt;/span&gt;
+
+.PHONY: run clean
+
+run:
+    &lt;span class="k"&gt;${&lt;/span&gt;&lt;span class="nv"&gt;EXEC&lt;/span&gt;&lt;span class="k"&gt;}&lt;/span&gt; &amp;amp;
+
+clean:
+    -rm &lt;span class="k"&gt;${&lt;/span&gt;&lt;span class="nv"&gt;EXEC&lt;/span&gt;&lt;span class="k"&gt;}&lt;/span&gt;
+    -rm &lt;span class="k"&gt;${&lt;/span&gt;&lt;span class="nv"&gt;OBJS&lt;/span&gt;&lt;span class="k"&gt;}&lt;/span&gt;
+    -rm &lt;span class="k"&gt;${&lt;/span&gt;&lt;span class="nv"&gt;DEPS&lt;/span&gt;&lt;span class="k"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;</summary></entry><entry><title>Merging PDF Files</title><link href="//2015_05_09_p0.html" rel="alternate"></link><updated>2015-05-09T00:00:00-06:00</updated><author><name>zshen</name></author><id>//2015_05_09_p0.html</id><summary type="html">&lt;h1&gt;Merging PDF Files&lt;/h1&gt;
 &lt;p&gt;Make sure &lt;a href="http://www.ghostscript.com/"&gt;&lt;strong&gt;Ghostscript&lt;/strong&gt;&lt;/a&gt; has been installed on the machine. Run &lt;em&gt;'gs -v'&lt;/em&gt; in a console to check this. &lt;em&gt;gs&lt;/em&gt; can then be used to merge PDF files. &lt;/p&gt;
 &lt;p&gt;Here is an example. I have five PDF files in the current folder: &lt;em&gt;a.pdf&lt;/em&gt;, &lt;em&gt;b.pdf&lt;/em&gt;, &lt;em&gt;c.pdf&lt;/em&gt;, &lt;em&gt;d.pdf&lt;/em&gt;, and &lt;em&gt;e.pdf&lt;/em&gt;. They can be merged into one PDF file &lt;em&gt;f.pdf&lt;/em&gt; in the same folder by the following command. &lt;/p&gt;
 &lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span class="err"&gt;$&lt;/span&gt; &lt;span class="n"&gt;gs&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;dNOPAUSE&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;sDEVICE&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;pdfwrite&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;sOUTPUTFILE&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;f&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;pdf&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;dBATCH&lt;/span&gt; &lt;span class="n"&gt;a&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;pdf&lt;/span&gt; &lt;span class="n"&gt;b&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;pdf&lt;/span&gt; &lt;span class="n"&gt;c&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;pdf&lt;/span&gt; &lt;span class="n"&gt;d&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;pdf&lt;/span&gt; &lt;span class="n"&gt;e&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;pdf&lt;/span&gt;
